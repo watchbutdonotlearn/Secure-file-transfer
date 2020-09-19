@@ -8,6 +8,4 @@ The basic concept of the project is simple. First, two clients agree to send eac
 This process, however, could be a little more streamlined, with most parts of it being able to be completely automated. This project seeks to streamline and automate that process such that sending an encrypted email and decrypting it can be as easy as a couple of clicks.
 
 
-To use the program, first, download the files and Node.js. Afterwards, put all the downloaded files into a single folder, open command line in the folder, and type in: "npm install --save", and to run the program after that, open the command line again and type in: "npm test"
-
-
+To use the program, here is a handy little instructions sheet: https://docs.google.com/document/d/1tLczGkPVhgeg3ksy9g8Xcw2d9JDTapvkOEOh2R_NnGE/edit?usp=sharing
