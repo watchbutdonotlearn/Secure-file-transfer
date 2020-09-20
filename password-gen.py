@@ -6,7 +6,7 @@ choices = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM`1234567890~!@#$%
 password_list = []
 for password_num in range(100):
     s = ""
-    for char_num in range(78):
+    for char_num in range(156):
         s = s + choices[floor(random()*92)]
     password_list.append(s)
 f.write("{\n")
