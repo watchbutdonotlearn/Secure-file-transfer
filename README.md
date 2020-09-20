@@ -12,3 +12,9 @@ For some comprehensive instructions on how to use the program, here is a handy l
 
 
 It should detail everything from start to finish of how to use the program, including how to send and recieve messages and how to generate password documents.
+
+
+
+
+
+Credits to captain_bboy, Eric Liu, and tony-jp-xu.
