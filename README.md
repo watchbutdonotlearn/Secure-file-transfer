@@ -17,4 +17,4 @@ It should detail everything from start to finish of how to use the program, incl
 
 
 
-Credits to captain_bboy, Eric Liu, and tony-jp-xu.
+Credits to captain_bboy for the vast majority of the code.
