@@ -9,7 +9,6 @@ for password_num in range(100):
     for char_num in range(156):
         s = s + choice(ascii_range) # Generate random ASCII character
     password_list.append(s)
-    print(s)
 
 with open("passwords.json", "w") as f:
     f.write("{\n")
