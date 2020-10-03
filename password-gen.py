@@ -20,3 +20,4 @@ for i in range(100):
         f.write(",")
     f.write("\n")
 f.write("}\n")
+f.close()
