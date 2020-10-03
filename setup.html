@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+  <head>
+    <style>
+    html {
+      height:100%;
+      overflow: hidden; 
+    }
+
+    body {
+      height:100%;
+    }
+    div {
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    div.box{
+      margin: 15px auto;
+      display: block;
+      width: 30%;
+      padding: 8px;
+      border: 1px solid gray;
+    }
+
+    input.a {
+      height:35px; 
+      width:33%; 
+      position: relative;
+      color: black;
+      background-color: whitesmoke;
+      text-align: center;
+      font: 500;
+    }
+
+    .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    }
+
+    h1,p,legend {
+        color: black;
+    }
+
+    div.boxx {
+      color: darkred;
+      font-size: xx-large;
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    a {
+      height:35px; 
+      width:33%; 
+      position: relative;
+      color: black;
+      background-color: whitesmoke;
+      text-align: center;
+    }
+
+    .bg-modal {
+      background-color: rgba(0, 0, 0, 0.8);
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-contents {
+      height: 300px;
+      width: 500px;
+      background-color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      border-radius: 4px;
+    }
+
+    input {
+      margin: 5px auto;
+      display: block;
+      width: 30%;
+      padding: 8px;
+      border: 1px solid gray;
+    }
+
+    .close {
+      position: absolute;
+      top: 0;
+      right: 10px;
+      font-size: 42px;
+      color: #333;
+      transform: rotate(45deg);
+      cursor: pointer;
+    }
+    .hover {
+      background: rgb(98, 104, 98);
+    }
+    </style>
+  
+    <meta charset="UTF-8">
+    <section>
+      <div>
+        <a href="decrypter.html">Decrypter</a>
+        <a> | </a>
+        <a href="encrypter.html">Encrypter</a>
+        <a> | </a>
+        <a href="setup.html">Login/ReLogin with your email!</a>
+      </div>
+    </section>
+    <title>Email Login</title>
+  </head>
+  <!-- <body style="background-image: url('./assets/background.jpg'); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover;"> -->
+  <body style="color: gray;">
+
+    <div class="bg-modal">
+      <div class="modal-contents">
+        <div class="close">+</div>
+        <form action="">
+          <div class="boxx">
+            <h>All complete</h>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <h1>Login to your Outlook account!</h1>
+        <form id="frm1" method="POST">
+          <fieldset>
+            <legend>Input</legend>
+            <p>
+              <label>Email:</label>
+              <input type = "email"
+                id = "myText"
+                value = "Email@outlook.com" />
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type = "text"
+                  id = "clientID"/>
+            </p>
+            <p>
+              <label>Your Name:</label>
+              <input type = "text"
+                value="Bob"
+                id = "name"/>
+          </p>
+          </fieldset>
+          <p>Reminder: you data is never sent anywhere except directly to Outlook's Authentication Servers. (Feel free to check the code!)</p>
+
+
+          <input type="button" class="a" id="sendbutton" onclick="return myFunction()" value="Login!"/>
+
+          <script>
+            window.ipcRenderer = require('electron').ipcRenderer;
+
+            ipcRenderer.on("loginsuccess", function() {
+              document.querySelector('.bg-modal').style.display = "flex";
+            })
+
+            document.querySelector('.close').addEventListener("click", function() {
+              document.querySelector('.bg-modal').style.display = "none";
+            });
+
+            function myFunction() {
+
+            var x = document.getElementById("frm1");
+            var text = "";
+                var i;
+                for (i = 0; i < x.length; i++) {
+                    text += x.elements[i].type + "-"
+                    text += x.elements[i].value + "<br>";
+                }
+
+                textarray = text.split(`<br>`)
+                textarray.shift()
+                text = textarray.join(`<br>`)
+
+                if(!text.split(`<br>`)[1].split(`-`)[1]) {
+                    document.getElementById("sendbutton").value = `No password given!`
+                }
+                if(!text.split(`<br>`)[0].split(`-`)[1] || text.split(`<br>`)[0].split(`-`)[1] == "Email@outlook.com") {
+                    document.getElementById("sendbutton").value = `No email given!`
+                }
+                if(!text.split(`<br>`)[2].split(`-`)[1] || text.split(`<br>`)[3].split(`-`)[1] == "Bob") {
+                    document.getElementById("sendbutton").value = `No name given!`
+                }
+                if(!text.split(`<br>`)[0].split(`-`)[1] && text.split(`<br>`)[1].split(`-`)[1] && text.split(`<br>`)[0].split(`-`)[1] !== "Email@outlook.com") return;
+                
+                else {
+                    let main = text.split(`<br>`)
+                    let email = main[0].split(`email-`)[1]
+                    let pass = main[1].split(`text-`)[1]
+                    let name = main[2].split(`text-`)[1]
+
+                    ipcRenderer.send('login', email, pass, name);
+                    setTimeout(() => {
+                        let send =  document.getElementById("sendbutton")
+                        send.parentNode.removeChild(send)
+                    }, 1000);
+                }
+            }
+          </script>  
+
+        </form>
+
+</body></html>

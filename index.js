@@ -1,33 +1,64 @@
 // Variables:
 const fs = require("fs")
-const { app, BrowserWindow, ipcMain, nativeImage, globalShortcut } = require('electron')
+const { app, BrowserWindow, ipcMain, nativeImage, globalShortcut, webContents } = require('electron')
 const os = require(`os`)
 const nodemailer = require("nodemailer");
-let storage = fs.readFileSync(`./assets/storage.txt`, {encoding:'utf8'})
+let appdatadir = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
+appdatadir += `/securefiletransfer`
+const unzipper = require(`unzipper`);
+let archive;
+
+const request = require('request');
+
+const download = (url, path, callback) => {
+  request.head(url, (err, res, body) => {
+    request(url)
+      .pipe(fs.createWriteStream(path))
+      .on('close', callback)
+  })
+}
+
+if(!fs.existsSync(appdatadir)) {
+  fs.mkdirSync(appdatadir);
+  fs.mkdirSync(appdatadir + `/assets`)
+  fs.mkdirSync(appdatadir + `/output`)
+  fs.writeFileSync(appdatadir + `/assets/storage.txt`, "")
+  download(`https://cdn.discordapp.com/attachments/675039532026036261/762033994032218122/Icon.ico`, `${appdatadir}/assets/Icon.ico`, function() {console.log(`Downloaded the icon.`)})
+}
+
+if(!fs.existsSync(appdatadir + `/assets/storage.txt`)) {
+  fs.writeFileSync(appdatadir + `/assets/storage.txt`, "")
+}
+if(!fs.existsSync(appdatadir + `/assets/Icon.ico`)) {
+  download(`https://cdn.discordapp.com/attachments/675039532026036261/762033994032218122/Icon.ico`, `${appdatadir}/assets/Icon.ico`, function() {console.log(`Downloaded the icon.`)})
+}
+
+let storage = fs.readFileSync(appdatadir + `/assets/storage.txt`, {encoding:'utf8'})
 
 // Generate passwords:
-// let passwordfil = require(`./test/test.json`)
+// let passwordfil = require(`./output/passwords.json`)
 
-// for(let l = 0; l < 100; l++) {
+// for(let l = 0; l < 250; l++) {
 
 //     var result           = '';
 //     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 //     var charactersLength = characters.length;
-//     for ( var i = 0; i < charactersLength; i++ ) {
+//     for ( var i = 0; i < 100; i++ ) {
 //         result += characters.charAt(Math.floor(Math.random() * charactersLength));
 //     }
 //     passwordfil[l] = encode_ascii85(result);
 // }
 
-// fs.writeFileSync(`./test/test.json`, JSON.stringify(passwordfil, null, 2));
+// fs.writeFileSync(`./output/passwords.json`, JSON.stringify(passwordfil, null, 2));
 
 // GUI:
 
-var image = nativeImage.createFromPath(__dirname + '/assets/Icon.ico'); 
+var image = nativeImage.createFromPath(appdatadir + '/assets/Icon.ico'); 
 image.setTemplateImage(true);
+let win;
 
 function createWindow () {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
       webPreferences: {
         // devTools: false,
         nodeIntegration: true
@@ -36,8 +67,8 @@ function createWindow () {
     })
 
     win.setMenuBarVisibility(false)
-    if(storage.split(`\n`)[1]) win.loadFile('./index.html')
-    else win.loadFile('./new.html')
+    if(storage.split(`\n`)[2]) win.loadFile('./decrypter.html')
+    else win.loadFile('./setup.html')
   }
   
   app.whenReady().then(createWindow)
@@ -54,87 +85,85 @@ function createWindow () {
     }
   })
 
-//   app.on(`ready`, () => {
-//     globalShortcut.register(`Control+Shift+I`, () => {})
-//   })
+  app.on(`ready`, () => {
+    globalShortcut.register(`Control+Shift+I`, () => {})
+  })
   
 // Login:
-ipcMain.on('login', function(event, email, pass) {
+ipcMain.on('login', function(event, email, pass, name) {
 
   let text = ""
   text += email + `\n`
-  text += pass
+  text += pass + `\n`
+  text += name
 
-  fs.writeFileSync(`./assets/storage.txt`, text);
+  fs.writeFileSync(appdatadir + `/assets/storage.txt`, text);
+  win.webContents.send('loginsuccess')
 
 });
 
-let archive = null;
-  // Clicking
-  ipcMain.on('sendclicked', function(event, arg) {
+ipcMain.on('sendclicked', function(event, arg) {
 
-    let main = arg.split(`<br>`)
-    let email = main[0].split(`email-`)[1]
-    let filetotransfer = main[1].split(`file-`)[1]
-    let passwordfile = require(main[2].split(`file-`)[1])
+  let main = arg.split(`<br>`)
+  let sendName = main[0].split(`text-`)[1]
+  let email = main[1].split(`email-`)[1]
+  let filetotransfer = main[2].split(`file-`)[1]
+  let passwordfile = require(main[3].split(`file-`)[1])
+  let passnumber = Math.floor(Math.random() * Object.keys(passwordfile).length);
+  let code = passwordfile[passnumber]
 
-    let passnumber = Math.floor(Math.random() * Object.keys(passwordfile).length);
+  console.log(`Using email: ` + email + `\nSending the file: ${filetotransfer.split("/").pop()}\nUsing the passwordfile: ${main[2].split(`file-`)[1].split("/").pop()}\nWith the password number of: ${passnumber}\nWhich equals: ${code}`)
 
-    let code = passwordfile[passnumber]
+  var archiver = require('archiver');
 
-    console.log(email, `\n`, filetotransfer.split("/").pop(), `\n`, main[2].split(`file-`)[1].split("/").pop(), `\n`, passnumber, `\n`, code)
-
-    var archiver = require('archiver');
- 
-    if(!archive) archiver.registerFormat('zip-encryptable', require('archiver-zip-encryptable'));
+  if(!archive) archiver.registerFormat('zip-encryptable', require('archiver-zip-encryptable'));
      
-    var output = fs.createWriteStream(__dirname + '/test/output.zip');
+  var output = fs.createWriteStream(appdatadir + `/output/${passnumber}.zip`);
      
-    archive = archiver('zip-encryptable', {
-        zlib: { level: 9 },
-        forceLocalTime: true,
-        password: code
+  archive = archiver('zip-encryptable', {
+    zlib: { level: 9 },
+    forceLocalTime: true,
+    password: code
+  });
+
+  archive.pipe(output);
+  archive.file(filetotransfer, {name: filetotransfer.split("/").pop()});
+
+  archive.finalize();      
+
+  sendemail()      
+
+  async function sendemail() {
+    storage = fs.readFileSync(appdatadir + `/assets/storage.txt`, {encoding:'utf8'})
+    let array = storage.split(`\n`)
+    let email2 = array[0]
+    let pass = array[1]
+    let myName = array[2]
+
+    var transport = nodemailer.createTransport({
+      service: `hotmail`,
+      auth: {
+        user: email2,
+        pass: pass
+      },
+      secure: true,
+      tls: {
+        ciphers:'SSLv3'
+    }
     });
 
-    archive.pipe(output);
-    archive.file(filetotransfer, {name: filetotransfer.split("/").pop()});
+    var message = {
 
-    archive.append(Buffer.from(" "), {name: `${passnumber}.txt`})
-
-    archive.finalize();      
-
-    sendemail()      
-
-    async function sendemail() {
-      storage = fs.readFileSync(`./assets/storage.txt`, {encoding:'utf8'})
-      let array = storage.split(`\n`)
-      console.log(array.join(`, `))
-      let email2 = array[0]
-      let pass = array[1]
-
-        var transport = nodemailer.createTransport({
-          service: `hotmail`,
-          auth: {
-            user: email2,
-            pass: pass
-          },
-          tls: {
-              ciphers:'SSLv3'
-          }
-      });
-
-      var message = {
-
-        from: `Sender Name <${email2}>`,
-        to: `"Receiver Name" <${email}>`,
-        subject: 'Secure File Transfer', 
-        text: 'This is a Secure File Transfer!',
-        attachments: [
-          {
-              filename: 'output.zip',
-              path: __dirname + '/test/output.zip'
-          }
-        ]
+      from: `"${myName}" <${email2}>`,
+      to: `"${sendName}" <${email}>`,
+      subject: 'Secure File Transfer', 
+      text: 'This is a Secure File Transfer!',
+      attachments: [
+        {
+          filename: `${passnumber}.zip`,
+          path: appdatadir + `/output/${passnumber}.zip`
+        }
+      ]
     };
     
     console.log('Sending Mail');
@@ -142,13 +171,49 @@ let archive = null;
       if(error){
           console.log('Error occured');
           console.log(error.message);
+          win.webContents.send('email', false)
           return;
       }
       console.log('Message sent successfully!');
-
+      win.webContents.send('email', true)
+      fs.unlinkSync(appdatadir + `/output/${passnumber}.zip`)
+      
       })
   }
 });
+
+ipcMain.on('decryptclicked', async function(event, filetotransfer, passwordfile) {
+  
+  let passfile = require(passwordfile)
+  let pas = filetotransfer.split("\\").pop()
+  let pass = passfile[pas.replace(`.zip`, ``)]
+  if(!pass) return console.log(`No pass! ${pas}, ${pas.replace(`.zip`, ``)}, ${passfile[filetotransfer.split(`/`).pop().replace(`.zip`, ``)]}`)
+
+  main(filetotransfer)
+
+  async function main (a) {
+    try {
+      const directory = await unzipper.Open.file(a);
+      const extracted = await directory.files.forEach(file => {
+        let filename = file.path.split(`/`).pop().toString()
+        file.stream(pass)
+        .pipe(fs.createWriteStream(`./output/`+filename))
+        .on('error', () => {
+           console.log('error on unzipping');
+           win.webContents.send('decrypt', `${filename}`, `err`)
+        })
+        .on('finish', () => {
+            console.log(`Successfully Unzipping: ${filename}`);
+            win.webContents.send('decrypt', `${filename}`, `no err`)
+        })
+      })
+      require('child_process').exec(`start "" "${appdatadir}/output/"`);
+    } catch(e) {
+      console.log(e);
+    }
+  };
+   
+})
 
 
 // Other Functions:
