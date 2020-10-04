@@ -18,6 +18,12 @@ Download for windows .exe:
 https://drive.google.com/file/d/1u7aJx3zoT0mQn4MF7p5tmM01c83uV1DY/view?usp=sharing
 
 
+Download for all unix systems executable:
+https://drive.google.com/drive/folders/1oe3vKhV92fKgPGG0zfrb-pHBcy0irG8i?usp=sharing
+
+
+
+
 
 
 
