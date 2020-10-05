@@ -158,8 +158,8 @@
 
                     if(text.split(`<br>`)[2].split(`-`)[1] && text.split(`<br>`)[1].split(`-`)[1]){
 
-                        let filetotransfer = textarray[1].split(`file-`)[1]
-                        let passwordfile = textarray[2].split(`file-`)[1]
+                        let filetotransfer = textarray[1].substring(5);
+                        let passwordfile = textarray[2].substring(5);
 
                         ipcRenderer.send('decryptclicked', filetotransfer, passwordfile);
                     }
