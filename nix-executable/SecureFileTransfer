@@ -1,4 +1,0 @@
-SCRIPTPATH=$(dirname "$0")
-export PATH="$SCRIPTPATH:/usr/bin:/bin"
-cd $SCRIPTPATH
-npm test
