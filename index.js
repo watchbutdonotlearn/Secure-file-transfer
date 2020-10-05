@@ -104,15 +104,16 @@ ipcMain.on('login', function(event, email, pass, name) {
 
 ipcMain.on('sendclicked', function(event, arg) {
 
-  let main = arg.split(`<br>`)
-  let sendName = main[0].split(`text-`)[1]
-  let email = main[1].split(`email-`)[1]
-  let filetotransfer = main[2].split(`file-`)[1]
-  let passwordfile = require(main[3].split(`file-`)[1])
+  let main = arg.split(`<br>`);
+  let sendName = main[0].substring(5);
+  let email = main[1].substring(6);
+  let filetotransfer = main[2].substring(5);
+  let passwordpath = main[3].substring(5);
+  let passwordfile = require(passwordpath);
   let passnumber = Math.floor(Math.random() * Object.keys(passwordfile).length);
   let code = passwordfile[passnumber]
 
-  console.log(`Using email: ` + email + `\nSending the file: ${filetotransfer.split("/").pop()}\nUsing the passwordfile: ${main[2].split(`file-`)[1].split("/").pop()}\nWith the password number of: ${passnumber}\nWhich equals: ${code}`)
+  console.log(`Using email: ` + email + `\nSending the file: ${filetotransfer.split("/").pop()}\nUsing the passwordfile: ${passwordpath.split("/").pop()}\nWith the password number of: ${passnumber}\nWhich equals: ${code}`)
 
   var archiver = require('archiver');
 
