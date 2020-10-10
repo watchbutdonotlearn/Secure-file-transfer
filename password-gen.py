@@ -9,7 +9,7 @@ for password_num in range(100):
     s = ""
     for char_num in range(156):
         s = s + choice(ascii_range) # Generate random ASCII character
-    password_dict[str(password_num)] = s
+    password_dict[str(password_num)] = "<~" + s + "~>"
 
 with open("passwords.json", "w") as f:
-    dump(password_dict, f, indent=2) # Write password to json file
+    dump(password_dict, f, indent="\t") # Write password to json file
