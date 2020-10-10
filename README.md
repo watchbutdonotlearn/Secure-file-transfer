@@ -8,8 +8,6 @@ The basic concept of the project is simple. First, two clients agree to send eac
 
 This process, however, could be a little more streamlined, with most parts of it being able to be completely automated. This project seeks to streamline and automate that process such that sending an encrypted email and decrypting it can be as easy as a couple of clicks.
 
-To get started, use the instruction sheet [here](https://docs.google.com/document/d/1tLczGkPVhgeg3ksy9g8Xcw2d9JDTapvkOEOh2R_NnGE/edit?usp=sharing). It should detail everything from start to finish of how to use the program, including how to send and recieve messages and how to generate password documents.
-
 ## Installation
 
 Click on the links below; they should take you to Google Drive, where you can download the .zip file.
