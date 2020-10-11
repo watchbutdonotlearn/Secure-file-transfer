@@ -147,7 +147,6 @@ ipcMain.on('sendclicked', function(event, arg) {
         user: email2,
         pass: pass
       },
-      secure: true,
       tls: {
         ciphers:'SSLv3'
     }
