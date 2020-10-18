@@ -11,7 +11,7 @@ from email.mime.text import MIMEText
 def encrypt():
     password = b'secret'
     
-    filetosend = input("input the name of the file you want to send")
+    filetosend = input("Input the name of the file you want to send: ")
     
     with pyzipper.AESZipFile('newtest.zip',
             'w',
@@ -22,12 +22,12 @@ def encrypt():
 
 
  # send the email
-def functionone():
-    subject = input("type subject here:")
-    body = input("type body text here:")
-    sender_email = input("type sender email here:")
-    receiver_email = input("type the reciever email here:")
-    password = input("Type your password and press enter:")
+def sendemail():
+    subject = input("Type subject here: ")
+    body = input("Type body text here: ")
+    sender_email = input("Type sender email here: ")
+    receiver_email = input("Type the reciever email here: ")
+    password = input("Type your password and press enter: ")
     
     # Create a multipart message and set headers
     message = MIMEMultipart()
@@ -43,7 +43,7 @@ def functionone():
     
     
     # filename = "a.txt"  # In same directory as script
-    filename = 'newtest.zip'
+    filename = "newtest.zip"
     
     with open(filename, "rb") as attachment:
         # Add file as application/octet-stream
@@ -71,9 +71,9 @@ def functionone():
         server.sendmail(sender_email, receiver_email, text)
 
 def decrypt():
-    archivename = input('input the name of the archive you want to decrypt:')
-    password1 = input('TEMPORARY input password name:').encode() # FIX THIS LATER ON AND TAKE PASSWORDS FROM JSON FILE
-    fname = input('TEMPORARY input filename inside of archive:')
+    archivename = input("Input the name of the archive you want to decrypt: ")
+    password1 = input("TEMPORARY Input password name: ").encode() # FIX THIS LATER ON AND TAKE PASSWORDS FROM JSON FILE
+    fname = input("TEMPORARY Input filename inside of archive: ")
     with pyzipper.AESZipFile(archivename) as f:
         f.pwd = password1
         print(f.infolist())
@@ -82,10 +82,10 @@ def decrypt():
         f.extractall(fname)
 
 while True:
-    selector = int(input("type 1 for sending emails, type 2 for recieving emails, type 3 to exit:"))
+    selector = int(input("Type 1 for sending emails, type 2 for recieving emails, type 3 to exit: "))
     
     if selector == 1:
-        functionone()
+        sendemail()
     
     if selector == 2:
         decrypt()
@@ -93,4 +93,4 @@ while True:
     if selector == 3:
         break
 
-dontclose = input("input anything here to exit")
+print("Thanks for using the Secure File Transfer.")
