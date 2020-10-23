@@ -18,7 +18,7 @@ def encrypt():
     print("Password number " + str(passnum) + " is " + password_dict[str(passnum)])
     zipname = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
-    filetosend = sendfilname
+    filetosend = sendfilname.split('/')[-1]
     with pyzipper.AESZipFile(zipname,
             'w',
             compression=pyzipper.ZIP_LZMA,
@@ -92,7 +92,7 @@ def decrypt():
     with pyzipper.AESZipFile(archivename) as f:
         f.pwd = zippassword
         f.extractall(".")
-    print("Your file has been extracted")
+    print("Your file has been extracted to " + archivename)
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):  
