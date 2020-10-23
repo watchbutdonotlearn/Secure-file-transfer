@@ -10,7 +10,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 
-
 def encrypt():
     passfilename = passfilname
     passnum = randint(0,99)
@@ -72,15 +71,13 @@ def sendemail():
             server.sendmail(sender_email, receiver_email, text)
 
     while True:
-        identoutlook = int(input("If you are using outlook, type 1, if you are using Gmail, type 2: "))
+        identoutlook = isoutlook
         if identoutlook == 1:
             outlooksend()
             break
         elif identoutlook == 2:
             gmailsend()
             break
-        else:
-            print("Please enter 1 or 2")
     print("Your email has been sent")
 
 def decrypt():
@@ -91,12 +88,9 @@ def decrypt():
     passarr = passarr[-1]
     with open(passfilename, "r") as f:
         password_dict = json.load(f)
-    print("Password number " + passarr + " is " + password_dict[passarr])
     zippassword = password_dict[passarr].encode()
     with pyzipper.AESZipFile(archivename) as f:
         f.pwd = zippassword
-        print(f.infolist())
-        print(f.filename)
         f.extractall(".")
     print("Your file has been extracted")
 
@@ -194,6 +188,29 @@ class Page1(tk.Frame):
         sendfilebuttonshow = ttk.Label(self, textvariable=string_2)
         sendfilebuttonshow.grid(row = 9, column = 3, padx = 1, pady = 10)
         
+        string_5 = tk.StringVar()
+        string_5.set("Outlook or gmail:")
+        isoutlook = 1
+        
+        def gmailbutton():
+            string_5.set("Outlook or Gmail: Gmail")
+            global isoutlook
+            isoutlook = 2
+        
+        def outlookbutton():
+            string_5.set("Outlook or Gmail: Outlook")
+            global isoutlook
+            isoutlook = 1
+        
+        outlookgmaillabel = ttk.Label(self, textvariable=string_5)
+        outlookgmaillabel.grid(row = 11, column = 1, padx = 1, pady = 10)
+        
+        dooutlookbutton = ttk.Button(self, text="outlook", command=outlookbutton)
+        dooutlookbutton.grid(row = 12, column = 1, padx = 10)
+        
+        dogmailbutton = ttk.Button(self, text="gmail", command=gmailbutton)
+        dogmailbutton.grid(row = 12, column = 3, padx = 10)
+        
         def sendtheemail():
             global sPass
             global sEmail
@@ -201,15 +218,10 @@ class Page1(tk.Frame):
             sPass = passwordbox.get()
             rEmail = recieveremailbox.get()
             sEmail = senderemailbox.get()
-            print(sPass)
-            print(rEmail)
-            print(sEmail)
-            print(passfilname)
-            print(sendfilname)
             sendemail()
         
         Sendemailbutton = ttk.Button(self, text="Send Email", command=sendtheemail)
-        Sendemailbutton.grid(row = 10, column = 1, padx = 10, pady = 10)
+        Sendemailbutton.grid(row = 14, column = 1, padx = 10, pady = 10)
 
 class Page2(tk.Frame):  
     def __init__(self, parent, controller): 
@@ -261,6 +273,4 @@ class Page2(tk.Frame):
 
 app = tkinterApp()
 app.title("Secure File Transfer")
-photo = tk.PhotoImage(file = "icon.png")
-app.iconphoto(False, photo)
 app.mainloop()
