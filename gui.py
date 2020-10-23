@@ -93,7 +93,7 @@ def decrypt():
     with pyzipper.AESZipFile(archivename) as f:
         f.pwd = zippassword
         f.extractall(".")
-    print("Your file has been extracted to " + archivename)
+    print("Your file has been extracted")
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):  
