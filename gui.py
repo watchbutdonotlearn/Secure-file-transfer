@@ -18,13 +18,14 @@ def encrypt():
     print("Password number " + str(passnum) + " is " + password_dict[str(passnum)])
     zipname = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
-    filetosend = sendfilname.split('/')[-1]
+    filetosend = sendfilname
+    filename_nodirs = filetosend.split('/')[-1]
     with pyzipper.AESZipFile(zipname,
             'w',
             compression=pyzipper.ZIP_LZMA,
             encryption=pyzipper.WZ_AES) as zf:
         zf.setpassword(zippassword)
-        zf.write(filetosend)
+        zf.write(filetosend, filename_nodirs)
     return zipname
 
 def sendemail():
