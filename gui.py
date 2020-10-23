@@ -19,7 +19,7 @@ def encrypt():
     zipname = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
     filetosend = sendfilname
-    filename_nodirs = filetosend.split('/')[-1]
+    filename_nodirs = filetosend.split("/")[-1]
     with pyzipper.AESZipFile(zipname,
             'w',
             compression=pyzipper.ZIP_LZMA,
@@ -34,43 +34,33 @@ def sendemail():
     sender_email = sEmail
     receiver_email = rEmail
     password = sPass
-    
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = receiver_email
     message["Subject"] = subject
     message["Bcc"] = receiver_email
-    
     message.attach(MIMEText(body, "plain"))
-
     filename = encrypt()
-
     with open(filename, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
-
     encoders.encode_base64(part)
-
     part.add_header(
             "Content-Disposition",
             f"attachment; filename= {filename}",
             )
-
     message.attach(part)
     text = message.as_string()
-
     def gmailsend():
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, text)
-
     def outlooksend():
         with smtplib.SMTP("smtp-mail.outlook.com", 587) as server:
             server.starttls()
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, text)
-
     while True:
         identoutlook = isoutlook
         if identoutlook == 1:
@@ -146,19 +136,19 @@ class Page1(tk.Frame):
         senderemaillabel = ttk.Label(self, text ="Input sender email address here")
         senderemaillabel.grid(row = 3, column = 1, padx = 2, pady = 1)
         
-        senderemailbox = ttk.Entry(self)
+        senderemailbox = ttk.Entry(self, width=50)
         senderemailbox.grid(row = 3, column = 3, padx = 10, pady = 1)
         
         recieveremaillabel = ttk.Label(self, text ="Input reciever email address here")
         recieveremaillabel.grid(row = 5, column = 1, padx = 2, pady = 1)
         
-        recieveremailbox = ttk.Entry(self)
+        recieveremailbox = ttk.Entry(self, width=50)
         recieveremailbox.grid(row = 5, column = 3, padx = 10, pady = 10)
         
         passwordlabel = ttk.Label(self, text ="Input password")
         passwordlabel.grid(row = 7, column = 1, padx = 2, pady = 1)
         
-        passwordbox = ttk.Entry(self)
+        passwordbox = ttk.Entry(self, show="*", width=50)
         passwordbox.grid(row = 7, column = 3, padx = 10, pady = 10)
         
         string_1 = tk.StringVar()
@@ -234,7 +224,7 @@ class Page2(tk.Frame):
                             command = lambda : controller.show_frame(Page1))
         button1.grid(row = 1, column = 1, padx = 10, pady = 10)
         
-        button2 = ttk.Button(self, text ="Startpage", 
+        button2 = ttk.Button(self, text ="Star Page", 
                             command = lambda : controller.show_frame(StartPage))
         button2.grid(row = 2, column = 1, padx = 10, pady = 10)
         
@@ -247,7 +237,7 @@ class Page2(tk.Frame):
             string_3.set(str(decryptarchivename))
         
         decryptarchivebutton = ttk.Button(self, text="choose file to decrypt", command=decryptarchivenamebutton)
-        decryptarchivebutton.grid(row = 3, column = 1, padx = 1, pady = 10)
+        decryptarchivebutton.grid(row = 3, column = 1, padx = 30, pady = 10)
         
         decryptlabel = ttk.Label(self, textvariable=string_3)
         decryptlabel.grid(row = 3, column = 2, padx = 1, pady = 10)
@@ -274,4 +264,6 @@ class Page2(tk.Frame):
 
 app = tkinterApp()
 app.title("Secure File Transfer")
+photo = tk.PhotoImage(file = "ico.png")
+app.iconphoto(False, photo)
 app.mainloop()
