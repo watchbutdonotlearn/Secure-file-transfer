@@ -11,7 +11,7 @@ This process, however, could be a little more streamlined, with most parts of it
 ## Installation
 
 Click on the links below; they should take you to Google Drive, where you can download the .zip file.
-  * Download for Windows - Coming soon!
+  * [Download for Windows](https://drive.google.com/drive/folders/1XHUzAwmiXqTAqV943SVTGdm1qiYf1yfy?usp=sharing)  
   * Download for macOS - Coming soon!
   * Download for Linux - Coming soon!
 
