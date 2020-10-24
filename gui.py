@@ -140,7 +140,7 @@ class Page1(tk.Frame):
         senderemailbox.grid(row = 3, column = 3, padx = 10, pady = 1)
         
         recieveremaillabel = ttk.Label(self, text ="Input reciever email address here")
-        recieveremaillabel.grid(row = 5, column = 1, padx = 2, pady = 1)
+        recieveremaillabel.grid(row = 5, column = 1, padx = 10, pady = 1)
         
         recieveremailbox = ttk.Entry(self, width=50)
         recieveremailbox.grid(row = 5, column = 3, padx = 10, pady = 10)
@@ -174,10 +174,10 @@ class Page1(tk.Frame):
             string_2.set(str(sendfilname))
         
         sendfilebutton = ttk.Button(self, text="choose file to send", command=choosesendfilebutton)
-        sendfilebutton.grid(row = 9, column = 1, padx = 1, pady = 10)
+        sendfilebutton.grid(row = 9, column = 1, padx = 1, pady = 5)
         
         sendfilebuttonshow = ttk.Label(self, textvariable=string_2)
-        sendfilebuttonshow.grid(row = 9, column = 3, padx = 1, pady = 10)
+        sendfilebuttonshow.grid(row = 9, column = 3, padx = 1, pady = 5)
         
         string_5 = tk.StringVar()
         string_5.set("Outlook or gmail:")
@@ -218,15 +218,15 @@ class Page2(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent) 
         label = ttk.Label(self, text ="Decrypt emails")
-        label.grid(row = 0, column = 1, padx = 10, pady = 10)
+        label.grid(row = 0, column = 1, padx = 56, pady = 10)
         
         button1 = ttk.Button(self, text ="Send Emails", 
                             command = lambda : controller.show_frame(Page1))
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        button1.grid(row = 1, column = 1, padx = 56, pady = 10)
         
-        button2 = ttk.Button(self, text ="Star Page", 
+        button2 = ttk.Button(self, text ="Start Page", 
                             command = lambda : controller.show_frame(StartPage))
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10)
+        button2.grid(row = 2, column = 1, padx = 56, pady = 10)
         
         string_3 = tk.StringVar()
         string_3.set("")
@@ -237,7 +237,7 @@ class Page2(tk.Frame):
             string_3.set(str(decryptarchivename))
         
         decryptarchivebutton = ttk.Button(self, text="choose file to decrypt", command=decryptarchivenamebutton)
-        decryptarchivebutton.grid(row = 3, column = 1, padx = 30, pady = 10)
+        decryptarchivebutton.grid(row = 3, column = 1, padx = 1, pady = 10)
         
         decryptlabel = ttk.Label(self, textvariable=string_3)
         decryptlabel.grid(row = 3, column = 2, padx = 1, pady = 10)
