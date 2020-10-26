@@ -4,6 +4,7 @@ import email, smtplib, ssl
 import pyzipper
 import random
 import json
+import platform
 from random import randint
 from email import encoders
 from email.mime.base import MIMEBase
@@ -300,6 +301,7 @@ class Recieve(tk.Frame):
 
 app = tkinterApp()
 app.title("Secure File Transfer")
-photo = tk.PhotoImage(file = "icon.png")
-app.iconphoto(False, photo)
+if platform.system == "Windows":
+    photo = tk.PhotoImage(file = "icon.png")
+    app.iconphoto(False, photo)
 app.mainloop()
