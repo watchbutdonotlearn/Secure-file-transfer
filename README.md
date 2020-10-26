@@ -19,4 +19,4 @@ To get started, use the instruction sheet (coming soon!). It should detail every
 
 ## Main author
 
-Send any comments, complaints, or hate mail to Eric Liu at ericliu637@gmail.com.
+Send any questions, comments, or complaints to Eric Liu at ericliu637@gmail.com.
