@@ -301,7 +301,7 @@ class Recieve(tk.Frame):
 
 app = tkinterApp()
 app.title("Secure File Transfer")
-if platform.system == "Windows":
+if platform.system() == "Windows":
     photo = tk.PhotoImage(file = "icon.png")
     app.iconphoto(False, photo)
 app.mainloop()
