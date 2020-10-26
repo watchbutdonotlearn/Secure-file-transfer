@@ -291,7 +291,7 @@ class Recieve(tk.Frame):
                 decrypt()
                 decryptconf.set('File successfully decrypted!')
             except:
-                decryptconf.set('Unseccessful decryption')
+                decryptconf.set('Unsuccessful decryption')
         
         confirmdecryptl = ttk.Label(self, textvariable=decryptconf)
         confirmdecryptl.grid(row = 5, column = 2)
