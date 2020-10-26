@@ -223,15 +223,17 @@ class Sending(tk.Frame):
         sendconf.set("")
         
         def sendtheemail():
-            sendconf.set("Unseccessful in sending")
             global sPass
             global sEmail
             global rEmail
-            sPass = passwordbox.get()
-            rEmail = recieveremailbox.get()
-            sEmail = senderemailbox.get()
-            sendemail()
-            sendconf.set("Email successfully sent!")
+            try:
+                sPass = passwordbox.get()
+                rEmail = recieveremailbox.get()
+                sEmail = senderemailbox.get()
+                sendemail()
+                sendconf.set("Email successfully sent!")
+            except:
+                sendconf.set("Unseccessful in sending")
         
         sendmailconfl = ttk.Label(self, textvariable=sendconf)
         sendmailconfl.grid(row = 14, column = 3)
@@ -284,9 +286,11 @@ class Recieve(tk.Frame):
         decryptconf.set('')
         
         def dodecryptbutton():
-            decryptconf.set('Unseccessful decryption')
-            decrypt()
-            decryptconf.set('File successfully decrypted!')
+            try:
+                decrypt()
+                decryptconf.set('File successfully decrypted!')
+            except:
+                decryptconf.set('Unseccessful decryption')
         
         confirmdecryptl = ttk.Label(self, textvariable=decryptconf)
         confirmdecryptl.grid(row = 5, column = 2)
