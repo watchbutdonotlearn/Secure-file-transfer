@@ -17,6 +17,8 @@ Click on the links below; they should take you to Google Drive, where you can do
 
 To get started, use the instruction sheet (coming soon!). It should detail everything from start to finish of how to use the program, including how to send and recieve messages and how to generate password documents.
 
-## Main author
+## Contact
 
-Send any questions, comments, or complaints to Eric Liu at ericliu637@gmail.com.
+If you have any problems or suggestions, please don't hesitate to post them in the "Issues" tab of this repository.
+
+Send any further questions, comments, or complaints to Eric Liu at ericliu637@gmail.com.
