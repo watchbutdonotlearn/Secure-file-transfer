@@ -11,7 +11,7 @@ This process, however, could be a little more streamlined, with most parts of it
 ## Installation
 
 Click on the links below; they should take you to Google Drive, where you can download the .zip file.
-  * [Download for Windows](https://drive.google.com/drive/folders/1XHUzAwmiXqTAqV943SVTGdm1qiYf1yfy?usp=sharing)  
+  * [Download for Windows 10](https://drive.google.com/drive/folders/1XHUzAwmiXqTAqV943SVTGdm1qiYf1yfy?usp=sharing)  
   * [Download for macOS](https://drive.google.com/file/d/1WiTJv56PePbm7nUqVPBtwnH3Odum__H-/view?usp=sharing) 
   * Download for Linux - Coming soon!
 
@@ -19,4 +19,4 @@ To get started, use the instruction sheet (coming soon!). It should detail every
 
 ## Main author
 
-Credits to captain_bboy for the vast majority of the code.
+Send any comments, complaints, or hate mail to Eric Liu at ericliu637@gmail.com.
