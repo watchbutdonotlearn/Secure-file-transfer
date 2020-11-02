@@ -18,7 +18,8 @@ def encrypt():
     with open(passfilename, "r") as f:
         password_dict = json.load(f)
     print("Password number " + str(passnum) + " is " + password_dict[str(passnum)])
-    zipname = str(passnum) + ".zip"
+    zipname = "./output/" + str(passnum) + ".zip"
+    zipname_nodirs = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
     filetosend = sendfilname
     filename_nodirs = filetosend.split("/")[-1]
@@ -28,7 +29,7 @@ def encrypt():
             encryption=pyzipper.WZ_AES) as zf:
         zf.setpassword(zippassword)
         zf.write(filetosend, filename_nodirs)
-    return zipname
+    return zipname_nodirs
 
 def sendemail():
     subject = 'Something'
@@ -43,7 +44,7 @@ def sendemail():
     message["Bcc"] = receiver_email
     message.attach(MIMEText(body, "plain"))
     filename = encrypt()
-    with open(filename, "rb") as attachment:
+    with open("./output/" + filename, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
     encoders.encode_base64(part)
