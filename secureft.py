@@ -18,8 +18,7 @@ def encrypt():
     with open(passfilename, "r") as f:
         password_dict = json.load(f)
     print("Password number " + str(passnum) + " is " + password_dict[str(passnum)])
-    zipname = "./output/" + str(passnum) + ".zip"
-    zipname_nodirs = str(passnum) + ".zip"
+    zipname = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
     filetosend = sendfilname
     filename_nodirs = filetosend.split("/")[-1]
@@ -29,11 +28,11 @@ def encrypt():
             encryption=pyzipper.WZ_AES) as zf:
         zf.setpassword(zippassword)
         zf.write(filetosend, filename_nodirs)
-    return zipname_nodirs
+    return zipname
 
 def sendemail():
-    subject = 'Something'
-    body = 'Something'
+    subject = bSubject
+    body = bBody
     sender_email = sEmail
     receiver_email = rEmail
     password = sPass
@@ -44,7 +43,7 @@ def sendemail():
     message["Bcc"] = receiver_email
     message.attach(MIMEText(body, "plain"))
     filename = encrypt()
-    with open("./output/" + filename, "rb") as attachment:
+    with open(filename, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
     encoders.encode_base64(part)
@@ -170,6 +169,18 @@ class Sending(tk.Frame):
         passwordbox = ttk.Entry(self, show="*", width=50)
         passwordbox.grid(row = 7, column = 3, padx = 10, pady = 5)
         
+        subjectlabel = ttk.Label(self, text ="Input subject line")
+        subjectlabel.grid(row = 8, column = 1, padx = 2, pady = 5)
+        
+        subjectbox = ttk.Entry(self, width=50)
+        subjectbox.grid(row = 8, column = 3, padx = 10, pady = 5)
+        
+        bodylabel = ttk.Label(self, text ="Input body text")
+        bodylabel.grid(row = 9, column = 1, padx = 2, pady = 5)
+        
+        bodybox = ttk.Entry(self, width=50)
+        bodybox.grid(row = 9, column = 3, padx = 10, pady = 5)
+        
         string_1 = tk.StringVar()
         string_1.set("")
         
@@ -179,10 +190,10 @@ class Sending(tk.Frame):
             string_1.set(str(passfilname))
         
         passfilebuttonshow = ttk.Label(self, textvariable=string_1)
-        passfilebuttonshow.grid(row = 8, column = 3, padx = 1, pady = 10)
+        passfilebuttonshow.grid(row = 10, column = 3, padx = 1, pady = 10)
         
         passfilebutton = ttk.Button(self, text="Choose Password File", command=choosepassfilebutton)
-        passfilebutton.grid(row = 8, column = 1, padx = 1, pady = 10)
+        passfilebutton.grid(row = 10, column = 1, padx = 1, pady = 10)
         
         string_2 = tk.StringVar()
         string_2.set("")
@@ -193,10 +204,10 @@ class Sending(tk.Frame):
             string_2.set(str(sendfilname))
         
         sendfilebutton = ttk.Button(self, text="Choose File to Send", command=choosesendfilebutton)
-        sendfilebutton.grid(row = 9, column = 1, padx = 1, pady = 10)
+        sendfilebutton.grid(row = 11, column = 1, padx = 1, pady = 10)
         
         sendfilebuttonshow = ttk.Label(self, textvariable=string_2)
-        sendfilebuttonshow.grid(row = 9, column = 3, padx = 1, pady = 10)
+        sendfilebuttonshow.grid(row = 11, column = 3, padx = 1, pady = 10)
         
         string_5 = tk.StringVar()
         string_5.set("Outlook or Gmail:")
@@ -213,13 +224,13 @@ class Sending(tk.Frame):
             isoutlook = 1
         
         outlookgmaillabel = ttk.Label(self, textvariable=string_5)
-        outlookgmaillabel.grid(row = 11, column = 1, padx = 1, pady = 5)
+        outlookgmaillabel.grid(row = 12, column = 1, padx = 1, pady = 5)
         
         dooutlookbutton = ttk.Button(self, text="Outlook", command=outlookbutton)
-        dooutlookbutton.grid(row = 12, column = 1, padx = 10, pady = 5)
+        dooutlookbutton.grid(row = 13, column = 1, padx = 10, pady = 5)
         
         dogmailbutton = ttk.Button(self, text="Gmail", command=gmailbutton)
-        dogmailbutton.grid(row = 12, column = 3, padx = 10, pady = 5)
+        dogmailbutton.grid(row = 13, column = 3, padx = 10, pady = 5)
         
         sendconf = tk.StringVar()
         sendconf.set("")
@@ -228,10 +239,15 @@ class Sending(tk.Frame):
             global sPass
             global sEmail
             global rEmail
+            global bBody
+            global bSubject
+            
             try:
                 sPass = passwordbox.get()
                 rEmail = recieveremailbox.get()
                 sEmail = senderemailbox.get()
+                bBody = bodybox.get()
+                bSubject=subjectbox.get()
                 sendemail()
                 sendconf.set("Email successfully sent!")
             except:
