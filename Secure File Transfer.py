@@ -30,8 +30,8 @@ def encrypt():
     return zipname
 
 def sendemail():
-    subject = 'Something'
-    body = 'Something'
+    subject = bSubject
+    body = bBody
     sender_email = sEmail
     receiver_email = rEmail
     password = sPass
@@ -137,6 +137,7 @@ class StartPage(tk.Frame):
         passwordgenbutton.grid(row = 3, column = 1, padx = 10, pady = 10)
 
 class Sending(tk.Frame): 
+      
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         self.configure(bg='grey94')
@@ -167,6 +168,18 @@ class Sending(tk.Frame):
         passwordbox = ttk.Entry(self, show="*", width=50)
         passwordbox.grid(row = 7, column = 3, padx = 10, pady = 5)
         
+        subjectlabel = ttk.Label(self, text ="Input subject line")
+        subjectlabel.grid(row = 8, column = 1, padx = 2, pady = 5)
+        
+        subjectbox = ttk.Entry(self, width=50)
+        subjectbox.grid(row = 8, column = 3, padx = 10, pady = 5)
+        
+        bodylabel = ttk.Label(self, text ="Input body text")
+        bodylabel.grid(row = 9, column = 1, padx = 2, pady = 5)
+        
+        bodybox = ttk.Entry(self, width=50)
+        bodybox.grid(row = 9, column = 3, padx = 10, pady = 5)
+        
         string_1 = tk.StringVar()
         string_1.set("")
         
@@ -176,10 +189,10 @@ class Sending(tk.Frame):
             string_1.set(str(passfilname))
         
         passfilebuttonshow = ttk.Label(self, textvariable=string_1)
-        passfilebuttonshow.grid(row = 8, column = 3, padx = 1, pady = 10)
+        passfilebuttonshow.grid(row = 10, column = 3, padx = 1, pady = 10)
         
         passfilebutton = ttk.Button(self, text="Choose Password File", command=choosepassfilebutton)
-        passfilebutton.grid(row = 8, column = 1, padx = 1, pady = 10)
+        passfilebutton.grid(row = 10, column = 1, padx = 1, pady = 10)
         
         string_2 = tk.StringVar()
         string_2.set("")
@@ -190,10 +203,10 @@ class Sending(tk.Frame):
             string_2.set(str(sendfilname))
         
         sendfilebutton = ttk.Button(self, text="Choose File to Send", command=choosesendfilebutton)
-        sendfilebutton.grid(row = 9, column = 1, padx = 1, pady = 10)
+        sendfilebutton.grid(row = 11, column = 1, padx = 1, pady = 10)
         
         sendfilebuttonshow = ttk.Label(self, textvariable=string_2)
-        sendfilebuttonshow.grid(row = 9, column = 3, padx = 1, pady = 10)
+        sendfilebuttonshow.grid(row = 11, column = 3, padx = 1, pady = 10)
         
         string_5 = tk.StringVar()
         string_5.set("Outlook or Gmail:")
@@ -210,13 +223,13 @@ class Sending(tk.Frame):
             isoutlook = 1
         
         outlookgmaillabel = ttk.Label(self, textvariable=string_5)
-        outlookgmaillabel.grid(row = 11, column = 1, padx = 1, pady = 5)
+        outlookgmaillabel.grid(row = 12, column = 1, padx = 1, pady = 5)
         
         dooutlookbutton = ttk.Button(self, text="Outlook", command=outlookbutton)
-        dooutlookbutton.grid(row = 12, column = 1, padx = 10, pady = 5)
+        dooutlookbutton.grid(row = 13, column = 1, padx = 10, pady = 5)
         
         dogmailbutton = ttk.Button(self, text="Gmail", command=gmailbutton)
-        dogmailbutton.grid(row = 12, column = 3, padx = 10, pady = 5)
+        dogmailbutton.grid(row = 13, column = 3, padx = 10, pady = 5)
         
         sendconf = tk.StringVar()
         sendconf.set("")
@@ -225,10 +238,15 @@ class Sending(tk.Frame):
             global sPass
             global sEmail
             global rEmail
+            global bBody
+            global bSubject
+            
             try:
                 sPass = passwordbox.get()
                 rEmail = recieveremailbox.get()
                 sEmail = senderemailbox.get()
+                bBody = bodybox.get()
+                bSubject=subjectbox.get()
                 sendemail()
                 sendconf.set("Email successfully sent!")
             except:
@@ -239,6 +257,7 @@ class Sending(tk.Frame):
         
         Sendemailbutton = ttk.Button(self, text="Send Email", command=sendtheemail)
         Sendemailbutton.grid(row = 14, column = 1, padx = 10, pady = 10)
+
 class Recieve(tk.Frame):  
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent) 
@@ -289,12 +308,13 @@ class Recieve(tk.Frame):
                 decryptconf.set('File successfully decrypted!')
             except:
                 decryptconf.set('Unsuccessful decryption')
-
+        
         confirmdecryptl = ttk.Label(self, textvariable=decryptconf)
         confirmdecryptl.grid(row = 5, column = 2)
         
         decryptbutton = ttk.Button(self, text="Decrypt", command=dodecryptbutton)
         decryptbutton.grid(row = 5, column =1, padx = 1, pady = 10)
+
 app = tkinterApp()
 app.title("Secure File Transfer")
 if platform.system() == "Windows":
