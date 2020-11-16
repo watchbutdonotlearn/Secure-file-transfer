@@ -5,12 +5,19 @@ import pyzipper
 import random
 import json
 import platform
+import os
 from random import randint
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
+
+def move_zip(zip_number):
+    if platform.system() == "Windows":
+        return "move " + str(zip_number) + ".zip output\\"
+    elif platform.system() == "Darwin" or platform.system() == "Linux":
+        return "mv " + str(zip_number) + ".zip output/"
 
 def encrypt():
     passfilename = passfilname
@@ -27,7 +34,7 @@ def encrypt():
             encryption=pyzipper.WZ_AES) as zf:
         zf.setpassword(zippassword)
         zf.write(filetosend, filename_nodirs)
-    return zipname
+    return passnum
 
 def sendemail():
     subject = bSubject
@@ -41,7 +48,8 @@ def sendemail():
     message["Subject"] = subject
     message["Bcc"] = receiver_email
     message.attach(MIMEText(body, "plain"))
-    filename = encrypt()
+    passnum = encrypt()
+    filename = str(passnum) + ".zip"
     with open(filename, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
@@ -52,6 +60,7 @@ def sendemail():
             )
     message.attach(part)
     text = message.as_string()
+    os.system(move_zip(passnum));
     def gmailsend():
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
