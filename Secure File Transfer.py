@@ -6,6 +6,7 @@ import random
 import json
 import platform
 import os
+from random import randint
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -20,7 +21,7 @@ def move_zip(zip_number):
 
 def encrypt():
     passfilename = passfilname
-    passnum = random.randint(0,99)
+    passnum = randint(0,99)
     with open(passfilename, "r") as f:
         password_dict = json.load(f)
     zipname = str(passnum) + ".zip"
@@ -100,7 +101,7 @@ class tkinterApp(tk.Tk):
         container.grid_rowconfigure(0, weight = 1) 
         container.grid_columnconfigure(0, weight = 1) 
         self.frames = {}   
-        for F in (StartPage, Sending, Recieve):
+        for F in (StartPage, Sending, Receive):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew") 
@@ -119,7 +120,7 @@ class StartPage(tk.Frame):
         button1 = ttk.Button(self, text ="Send Email", command = lambda : controller.show_frame(Sending))
         button1.grid(row = 1, column = 1, padx = 10, pady = 10)
         
-        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Recieve))
+        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive))
         button2.grid(row = 2, column = 1, padx = 10, pady = 10)
         
         passconf = tk.StringVar()
@@ -155,7 +156,7 @@ class Sending(tk.Frame):
         button1 = ttk.Button(self, text ="Start Page", command = lambda : controller.show_frame(StartPage)) 
         button1.grid(row = 1, column = 1, padx = 2, pady = 10) 
         
-        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Recieve)) 
+        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive)) 
         button2.grid(row = 2, column = 1, padx = 2, pady = 10) 
         
         senderemaillabel = ttk.Label(self, text ="Input sender email address here")
@@ -164,11 +165,11 @@ class Sending(tk.Frame):
         senderemailbox = ttk.Entry(self, width=50)
         senderemailbox.grid(row = 3, column = 3, padx = 10, pady = 5)
         
-        recieveremaillabel = ttk.Label(self, text ="Input reciever email address here")
-        recieveremaillabel.grid(row = 5, column = 1, padx = 9, pady = 5)
+        receiveremaillabel = ttk.Label(self, text ="Input receiver email address here")
+        receiveremaillabel.grid(row = 5, column = 1, padx = 9, pady = 5)
         
-        recieveremailbox = ttk.Entry(self, width=50)
-        recieveremailbox.grid(row = 5, column = 3, padx = 11, pady = 5)
+        receiveremailbox = ttk.Entry(self, width=50)
+        receiveremailbox.grid(row = 5, column = 3, padx = 11, pady = 5)
         
         passwordlabel = ttk.Label(self, text ="Input password")
         passwordlabel.grid(row = 7, column = 1, padx = 2, pady = 5)
@@ -251,7 +252,7 @@ class Sending(tk.Frame):
             
             try:
                 sPass = passwordbox.get()
-                rEmail = recieveremailbox.get()
+                rEmail = receiveremailbox.get()
                 sEmail = senderemailbox.get()
                 bBody = bodybox.get()
                 bSubject=subjectbox.get()
@@ -266,7 +267,7 @@ class Sending(tk.Frame):
         Sendemailbutton = ttk.Button(self, text="Send Email", command=sendtheemail)
         Sendemailbutton.grid(row = 14, column = 1, padx = 10, pady = 10)
 
-class Recieve(tk.Frame):  
+class Receive(tk.Frame):  
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent) 
         self.configure(bg='grey94')
