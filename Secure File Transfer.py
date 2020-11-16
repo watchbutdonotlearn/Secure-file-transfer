@@ -6,7 +6,6 @@ import random
 import json
 import platform
 import os
-from random import randint
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -21,7 +20,7 @@ def move_zip(zip_number):
 
 def encrypt():
     passfilename = passfilname
-    passnum = randint(0,99)
+    passnum = random.randint(0,99)
     with open(passfilename, "r") as f:
         password_dict = json.load(f)
     zipname = str(passnum) + ".zip"
