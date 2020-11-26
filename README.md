@@ -15,7 +15,7 @@ Click on the links below; they should take you to Google Drive, where you can do
   * [Download for macOS](https://drive.google.com/file/d/1WiTJv56PePbm7nUqVPBtwnH3Odum__H-/view?usp=sharing) 
   * [Download for Linux](https://drive.google.com/file/d/16epe82DhuAYJE1SW9jqnpM-87o-Q9Fu1/view?usp=sharing) 
   
-To get started, use the [instruction sheet](https://docs.google.com/document/d/1PjVwh9b0x413U_ZZO0R7p5SxFTPe8tJpMQnGTzmUGiQ/edit?usp=sharing). It should detail everything from start to finish of how to use the program, including how to send and recieve messages and how to generate password documents.
+To get started, use the [instruction sheet](https://docs.google.com/document/d/1PjVwh9b0x413U_ZZO0R7p5SxFTPe8tJpMQnGTzmUGiQ/edit?usp=sharing). It should detail everything from start to finish of how to use the program, including how to send and receive messages and how to generate password documents.
 
 ## Contact
 
