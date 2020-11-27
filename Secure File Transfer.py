@@ -45,7 +45,6 @@ def sendemail():
     message["From"] = sender_email
     message["To"] = receiver_email
     message["Subject"] = subject
-    message["Bcc"] = receiver_email
     message.attach(MIMEText(body, "plain"))
     passnum = encrypt()
     filename = str(passnum) + ".zip"
