@@ -13,20 +13,20 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 
+VERSION = ("1", "0", "0a")
+
 def updates_available():
-    with open("VERSION.txt", "r") as f:
-        local_version = tuple(f.read().strip("\n").split("."))
-        if local_version[2][-1] == "a" or local_version[2][-1] == "b":
-            local_status = local_version[2][-1]
-        else:
-            local_status = "r"
+    local_version = VERSION
+    if local_version[2][-1] == "a" or local_version[2][-1] == "b":
+        local_status = local_version[2][-1]
+    else:
+        local_status = "r"
     with urllib.request.urlopen("https://raw.githubusercontent.com/watchbutdonotlearn/Secure-file-transfer/main/VERSION.txt")  as f:
         release_version = tuple(f.read().decode().strip("\n").split("."))
         if release_version[2][-1] == "a" or release_version[2][-1] == "b":
             release_status = release_version[2][-1]
         else:
             release_status = "r"
-    up_to_date = "Your version of Secure File Transfer is up to date."
     out_of_date = "The current version of Secure File Transfer is " + ".".join(release_version) + \
             "; you are on version " + ".".join(local_version) + ". " + \
             "Please update your software."
@@ -40,7 +40,7 @@ def updates_available():
             (local_status, release_status) == ("b", "r") or \
             (local_status, release_status) == ("a", "r"):
         return out_of_date
-    return up_to_date
+    return ""
 
 def move_zip(zip_number):
     if platform.system() == "Windows":
