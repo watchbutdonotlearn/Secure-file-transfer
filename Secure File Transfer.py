@@ -13,7 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 
-VERSION = ("1", "0", "0a")
+VERSION = ("0", "0", "0a")
 
 def updates_available():
     local_version = VERSION
@@ -30,16 +30,29 @@ def updates_available():
     out_of_date = ("The current version of Secure File Transfer is {};".format(".".join(release_version)), 
             "you are on version {}.".format(".".join(local_version)), 
             "Please update your software.")
+    ahead = ("The current version of Secure File Transfer is {};".format(".".join(release_version)), 
+            "you are on version {}.".format(".".join(local_version)), 
+            "Please note that you are using an unreleased version.")
     if int(local_version[0]) < int(release_version[0]):
-        return out_of_date    
+        return out_of_date
+    elif int(local_version[0]) > int(release_version[0]):
+        return ahead 
     if int(local_version[1]) < int(release_version[1]):
         return out_of_date    
+    elif int(local_version[1]) > int(release_version[2]):
+        return ahead
     if int(local_version[2].strip("ab")) < int(release_version[2].strip("ab")):
         return out_of_date
+    elif int(local_version[2].strip("ab")) > int(release_version[2].strip("ab")):
+        return ahead
     if (local_status, release_status) == ("a", "b") or \
             (local_status, release_status) == ("b", "r") or \
             (local_status, release_status) == ("a", "r"):
         return out_of_date
+    elif (local_status, release_status) == ("b", "a") or \
+            (local_status, release_status) == ("r", "b") or \
+            (local_status, release_status) == ("r", "a"):
+        return ahead
     return None
 
 def move_zip(zip_number):
