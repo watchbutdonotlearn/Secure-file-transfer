@@ -39,7 +39,7 @@ def updates_available():
         return ahead 
     if int(local_version[1]) < int(release_version[1]):
         return out_of_date    
-    elif int(local_version[1]) > int(release_version[2]):
+    elif int(local_version[1]) > int(release_version[1]):
         return ahead
     if int(local_version[2].strip("ab")) < int(release_version[2].strip("ab")):
         return out_of_date
