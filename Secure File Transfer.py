@@ -13,10 +13,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 
-VERSION = ("0", "0", "0a")
+local_version = ("0", "0", "0a")
 
 def updates_available():
-    local_version = VERSION
     if local_version[2][-1] == "a" or local_version[2][-1] == "b":
         local_status = local_version[2][-1]
     else:
@@ -62,75 +61,59 @@ def move_zip(zip_number):
         return "mv " + str(zip_number) + ".zip output/"
 
 def encrypt():
-    passfilename = passfilname
     passnum = random.randint(0,99)
-    with open(passfilename, "r") as f:
+    with open(passfilname, "r") as f:
         password_dict = json.load(f)
     zipname = str(passnum) + ".zip"
     zippassword = password_dict[str(passnum)].encode()
-    filetosend = sendfilname
-    filename_nodirs = filetosend.split("/")[-1]
-    with pyzipper.AESZipFile(zipname,
-            'w',
-            compression=pyzipper.ZIP_LZMA,
-            encryption=pyzipper.WZ_AES) as zf:
+    filename_nodirs = sendfilname.split("/")[-1]
+    with pyzipper.AESZipFile(zipname, 'w', compression=pyzipper.ZIP_LZMA, encryption=pyzipper.WZ_AES) as zf:
         zf.setpassword(zippassword)
-        zf.write(filetosend, filename_nodirs)
+        zf.write(sendfilname, filename_nodirs)
     return passnum
 
 def sendemail():
-    subject = bSubject
-    body = bBody
-    sender_email = sEmail
-    receiver_email = rEmail
-    password = sPass
     message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = receiver_email
-    message["Subject"] = subject
-    message.attach(MIMEText(body, "plain"))
+    message["From"] = sEmail
+    message["To"] = rEmail
+    message["Subject"] = bSubject
+    message.attach(MIMEText(bBody, "plain"))
     passnum = encrypt()
     filename = str(passnum) + ".zip"
     with open(filename, "rb") as attachment:
         part = MIMEBase("application", "octet-stream")
         part.set_payload(attachment.read())
     encoders.encode_base64(part)
-    part.add_header(
-            "Content-Disposition",
-            f"attachment; filename= {filename}",
-            )
+    part.add_header("Content-Disposition", f"attachment; filename= {filename}")
     message.attach(part)
     text = message.as_string()
     os.system(move_zip(passnum));
     def gmailsend():
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, text)
+            server.login(sEmail, sPass)
+            server.sendmail(sEmail, rEmail, text)
     def outlooksend():
         with smtplib.SMTP("smtp-mail.outlook.com", 587) as server:
             server.starttls()
-            server.login(sender_email, password)
-            server.sendmail(sender_email, receiver_email, text)
+            server.login(sEmail, sPass)
+            server.sendmail(sEmail, rEmail, text)
     while True:
-        identoutlook = isoutlook
-        if identoutlook == 1:
+        if isoutlook == 1:
             outlooksend()
             break
-        elif identoutlook == 2:
+        elif isoutlook == 2:
             gmailsend()
             break
 
 def decrypt():
-    archivename = decryptarchivename
-    passfilename = decryptpasswfilname
-    passnum = archivename.strip(".zip")
+    passnum = decryptarchivename.strip(".zip")
     passarr = passnum.split('/')
     passarr = passarr[-1]
-    with open(passfilename, "r") as f:
+    with open(decryptpasswfilname, "r") as f:
         password_dict = json.load(f)
     zippassword = password_dict[passarr].encode()
-    with pyzipper.AESZipFile(archivename) as f:
+    with pyzipper.AESZipFile(decryptarchivename) as f:
         f.pwd = zippassword
         f.extractall(".")
 
@@ -155,14 +138,15 @@ class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.configure(bg='grey94')
-        label = ttk.Label(self, text ="Welcome to Secure File Transfer!")
-        label.grid(row = 0, column = 1, padx = 10, pady = 10)
         
-        button1 = ttk.Button(self, text ="Send Email", command = lambda : controller.show_frame(Sending))
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        title = ttk.Label(self, text ="Welcome to Secure File Transfer!")
+        title.grid(row = 0, column = 1, padx = 10, pady = 10)
         
-        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive))
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10)
+        sendpagebutton = ttk.Button(self, text ="Send Email", command = lambda : controller.show_frame(Sending))
+        sendpagebutton.grid(row = 1, column = 1, padx = 10, pady = 10)
+        
+        recievepagebutton = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive))
+        recievepagebutton.grid(row = 2, column = 1, padx = 10, pady = 10)
         
         passconf = tk.StringVar()
         passconf.set("")
@@ -196,14 +180,15 @@ class Sending(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent)
         self.configure(bg='grey94')
-        label = ttk.Label(self, text ="Send Email") 
-        label.grid(row = 0, column = 1, padx = 2, pady = 10) 
         
-        button1 = ttk.Button(self, text ="Start Page", command = lambda : controller.show_frame(StartPage)) 
-        button1.grid(row = 1, column = 1, padx = 2, pady = 10) 
+        title = ttk.Label(self, text ="Send Email") 
+        title.grid(row = 0, column = 1, padx = 2, pady = 10) 
         
-        button2 = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive)) 
-        button2.grid(row = 2, column = 1, padx = 2, pady = 10) 
+        startp = ttk.Button(self, text ="Start Page", command = lambda : controller.show_frame(StartPage)) 
+        startp.grid(row = 1, column = 1, padx = 2, pady = 10) 
+        
+        recievepage = ttk.Button(self, text ="Decrypt Files", command = lambda : controller.show_frame(Receive)) 
+        recievepage.grid(row = 2, column = 1, padx = 2, pady = 10) 
         
         senderemaillabel = ttk.Label(self, text ="Input sender email address here")
         senderemaillabel.grid(row = 3, column = 1, padx = 2, pady = 5)
@@ -301,7 +286,7 @@ class Sending(tk.Frame):
                 rEmail = receiveremailbox.get()
                 sEmail = senderemailbox.get()
                 bBody = bodybox.get()
-                bSubject=subjectbox.get()
+                bSubject = subjectbox.get()
                 sendemail()
                 sendconf.set("Email successfully sent!")
             except:
@@ -317,14 +302,15 @@ class Receive(tk.Frame):
     def __init__(self, parent, controller): 
         tk.Frame.__init__(self, parent) 
         self.configure(bg='grey94')
-        label = ttk.Label(self, text ="Decrypt Files")
-        label.grid(row = 0, column = 1, padx = 56, pady = 10)
         
-        button1 = ttk.Button(self, text ="Send Email", command = lambda : controller.show_frame(Sending))
-        button1.grid(row = 1, column = 1, padx = 59, pady = 10)
+        title = ttk.Label(self, text ="Decrypt Files")
+        title.grid(row = 0, column = 1, padx = 56, pady = 10)
         
-        button2 = ttk.Button(self, text ="Start Page", command = lambda : controller.show_frame(StartPage))
-        button2.grid(row = 2, column = 1, padx = 56, pady = 10)
+        showsendpage = ttk.Button(self, text ="Send Email", command = lambda : controller.show_frame(Sending))
+        showsendpage.grid(row = 1, column = 1, padx = 59, pady = 10)
+        
+        showstartpage = ttk.Button(self, text ="Start Page", command = lambda : controller.show_frame(StartPage))
+        showstartpage.grid(row = 2, column = 1, padx = 56, pady = 10)
         
         string_3 = tk.StringVar()
         string_3.set("")
@@ -373,6 +359,5 @@ class Receive(tk.Frame):
 app = tkinterApp()
 app.title("Secure File Transfer")
 if platform.system() == "Windows":
-    photo = tk.PhotoImage(file = "icon.png")
-    app.iconphoto(False, photo)
+    app.iconphoto(False, tk.PhotoImage(file = "icon.png"))
 app.mainloop()
