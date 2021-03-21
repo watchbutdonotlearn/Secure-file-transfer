@@ -14,7 +14,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from tkinter.filedialog import askopenfilename
 
-local_version = ("0", "0", "0a")
+local_version = ("0", "0", "1a")
 
 def updates_available():
     if local_version[2][-1] == "a" or local_version[2][-1] == "b":
