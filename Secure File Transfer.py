@@ -7,6 +7,7 @@ import json
 import platform
 import os
 import urllib.request
+import secrets
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -157,8 +158,10 @@ class StartPage(tk.Frame):
             ascii_range = [chr(i) for i in range(33, 127) if chr(i) not in forbidden]
             for password_num in range(100):
                 s = ""
-                for char_num in range(156):
-                    s = s + random.choice(ascii_range)
+                for char_num in range(random.randint(200,210)):
+                    #s = s + random.choice(ascii_range)
+                    secretsGenerator = secrets.SystemRandom()
+                    s = s + secretsGenerator.choice(ascii_range)
                 password_dict[str(password_num)] = "<~" + s + "~>"
             with open("passwords.json", "w") as f:
                 json.dump(password_dict, f, indent="\t")
